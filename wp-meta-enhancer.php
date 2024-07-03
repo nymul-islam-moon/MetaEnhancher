@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:        MetaEnhancer
+ * Plugin Name:        Meta Enhancer
  * Description:        Easily add SEO meta tags to posts and pages, and customize the admin footer message.
  * Author:             Nymul Islam
  * Author URI:         https://nymul-islam-moon.com/
@@ -14,19 +14,19 @@
 
 
 // Add the settings menu
-add_action('admin_menu', 'wp_meta_enhancer_menu');
-function wp_meta_enhancer_menu() {
-    add_options_page('WP-MetaEnhancer Settings', 'WP-MetaEnhancer', 'manage_options', 'wp_meta_enhancer', 'wp_meta_enhancer_options');
+add_action('admin_menu', 'meta_enhancer_menu');
+function meta_enhancer_menu() {
+    add_options_page('MetaEnhancer Settings', 'MetaEnhancer', 'manage_options', 'meta_enhancer', 'meta_enhancer_options');
 }
 
-function wp_meta_enhancer_options() {
+function meta_enhancer_options() {
     ?>
     <div class="wrap">
-        <h1>WP-MetaEnhancer Settings</h1>
+        <h1>MetaEnhancer Settings</h1>
         <form method="post" action="options.php">
-            <?php settings_fields('wp_meta_enhancer_group'); ?>
-            <?php do_settings_sections('wp_meta_enhancer'); ?>
-            <?php wp_nonce_field('wp_meta_enhancer_save_settings', 'wp_meta_enhancer_nonce'); ?>
+            <?php settings_fields('meta_enhancer_group'); ?>
+            <?php do_settings_sections('meta_enhancer'); ?>
+            <?php wp_nonce_field('meta_enhancer_save_settings', 'meta_enhancer_nonce'); ?>
             <?php submit_button(); ?>
         </form>
     </div>
@@ -34,38 +34,38 @@ function wp_meta_enhancer_options() {
 }
 
 // Register settings
-add_action('admin_init', 'wp_meta_enhancer_settings');
-function wp_meta_enhancer_settings() {
+add_action('admin_init', 'meta_enhancer_settings');
+function meta_enhancer_settings() {
     // SEO Settings
-    register_setting('wp_meta_enhancer_group', 'wp_meta_enhancer_seo_tags');
-    add_settings_section('wp_meta_enhancer_seo_section', 'Default SEO Meta Tags', null, 'wp_meta_enhancer');
-    add_settings_field('seo_meta_title', 'Default Title', 'seo_meta_title_callback', 'wp_meta_enhancer', 'wp_meta_enhancer_seo_section');
-    add_settings_field('seo_meta_description', 'Default Description', 'seo_meta_description_callback', 'wp_meta_enhancer', 'wp_meta_enhancer_seo_section');
-    add_settings_field('seo_meta_keywords', 'Default Keywords', 'seo_meta_keywords_callback', 'wp_meta_enhancer', 'wp_meta_enhancer_seo_section');
+    register_setting('meta_enhancer_group', 'meta_enhancer_seo_tags');
+    add_settings_section('meta_enhancer_seo_section', 'Default SEO Meta Tags', null, 'meta_enhancer');
+    add_settings_field('seo_meta_title', 'Default Title', 'seo_meta_title_callback', 'meta_enhancer', 'meta_enhancer_seo_section');
+    add_settings_field('seo_meta_description', 'Default Description', 'seo_meta_description_callback', 'meta_enhancer', 'meta_enhancer_seo_section');
+    add_settings_field('seo_meta_keywords', 'Default Keywords', 'seo_meta_keywords_callback', 'meta_enhancer', 'meta_enhancer_seo_section');
 
     // Footer Message Settings
-    register_setting('wp_meta_enhancer_group', 'wp_meta_enhancer_footer_message');
-    add_settings_section('wp_meta_enhancer_footer_section', 'Admin Footer Message', null, 'wp_meta_enhancer');
-    add_settings_field('footer_message', 'Footer Message', 'footer_message_callback', 'wp_meta_enhancer', 'wp_meta_enhancer_footer_section');
+    register_setting('meta_enhancer_group', 'wp_meta_enhancer_footer_message');
+    add_settings_section('meta_enhancer_footer_section', 'Admin Footer Message', null, 'meta_enhancer');
+    add_settings_field('footer_message', 'Footer Message', 'footer_message_callback', 'meta_enhancer', 'meta_enhancer_footer_section');
 }
 
 // SEO Settings Callbacks
 function seo_meta_title_callback() {
-    $options = get_option('wp_meta_enhancer_seo_tags');
+    $options = get_option('meta_enhancer_seo_tags');
     $title = isset($options['title']) ? esc_attr($options['title']) : '';
-    echo '<input type="text" name="wp_meta_enhancer_seo_tags[title]" value="' . esc_attr($title) . '">';
+    echo '<input type="text" name="meta_enhancer_seo_tags[title]" value="' . esc_attr($title) . '">';
 }
 
 function seo_meta_description_callback() {
-    $options = get_option('wp_meta_enhancer_seo_tags');
+    $options = get_option('meta_enhancer_seo_tags');
     $description = isset($options['description']) ? esc_attr($options['description']) : '';
-    echo '<textarea name="wp_meta_enhancer_seo_tags[description]">' . esc_textarea($description) . '</textarea>';
+    echo '<textarea name="meta_enhancer_seo_tags[description]">' . esc_textarea($description) . '</textarea>';
 }
 
 function seo_meta_keywords_callback() {
-    $options = get_option('wp_meta_enhancer_seo_tags');
+    $options = get_option('meta_enhancer_seo_tags');
     $keywords = isset($options['keywords']) ? esc_attr($options['keywords']) : '';
-    echo '<input type="text" name="wp_meta_enhancer_seo_tags[keywords]" value="' . esc_attr($keywords) . '">';
+    echo '<input type="text" name="meta_enhancer_seo_tags[keywords]" value="' . esc_attr($keywords) . '">';
 }
 
 // Footer Message Callback
@@ -128,7 +128,7 @@ function output_metaenhancer_meta_tags() {
         global $post;
         $meta = get_post_meta($post->ID, 'metaenhancer_meta_tags', true);
     } else {
-        $meta = get_option('wp_meta_enhancer_seo_tags');
+        $meta = get_option('meta_enhancer_seo_tags');
     }
 
     if ($meta) {
