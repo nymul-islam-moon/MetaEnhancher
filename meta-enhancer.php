@@ -28,7 +28,14 @@ class Meta_Enhancer {
     }
 
     public function add_settings_menu() {
-        add_options_page('MetaEnhancer Settings', 'MetaEnhancer', 'manage_options', 'meta_enhancer', [$this, 'settings_page']);
+        add_menu_page(
+            'Meta Enhancer', // Page title
+            'Meta Enhancer',          // Menu title
+            'manage_options',        // Capability
+            'meta_enhancer',         // Menu slug
+            [$this, 'settings_page'], // Callback function
+            'dashicons-shortcode' // Icon URL or Dashicon class
+        );
     }
 
     public function settings_page() {
