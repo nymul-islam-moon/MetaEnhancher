@@ -93,15 +93,16 @@ function metaenhancer_meta_box_callback($post) {
     </p>
     <p>
         <label for="seo_meta_description">Description</label>
-        <textarea name="metaenhancer_meta_tags[description]" id="seo_meta_description"><?php echo esc_textarea($description) ?></textarea>
+        <textarea name="metaenhancer_meta_tags[description]" id="seo_meta_description"><?php echo esc_textarea($description); ?></textarea>
     </p>
     <p>
         <label for="seo_meta_keywords">Keywords</label>
-        <input type="text" name="metaenhancer_meta_tags[keywords]" id="seo_meta_keywords" value="<?php echo esc_attr($keywords) ?>">
+        <input type="text" name="metaenhancer_meta_tags[keywords]" id="seo_meta_keywords" value="<?php echo esc_attr($keywords); ?>">
     </p>
     <?php wp_nonce_field('save_metaenhancer_meta_tags', 'metaenhancer_meta_tags_nonce'); ?>
     <?php
 }
+
 
 add_action('save_post', 'save_metaenhancer_meta_tags');
 function save_metaenhancer_meta_tags($post_id) {
@@ -117,17 +118,25 @@ function save_metaenhancer_meta_tags($post_id) {
 
     if (isset($_POST['metaenhancer_meta_tags'])) {
         $meta = $_POST['metaenhancer_meta_tags'];
+        // Ensure all values are properly sanitized before saving
+        $meta = array_map('sanitize_text_field', $meta);
         update_post_meta($post_id, 'metaenhancer_meta_tags', $meta);
     }
 }
 
 // Output SEO meta tags in the head
+// Output SEO meta tags in the head
 add_action('wp_head', 'output_metaenhancer_meta_tags');
 function output_metaenhancer_meta_tags() {
+    $meta = null;
+
     if (is_singular()) {
         global $post;
         $meta = get_post_meta($post->ID, 'metaenhancer_meta_tags', true);
-    } else {
+    }
+
+    // Fallback to default meta tags if not set on a singular post/page
+    if (empty($meta) || !is_array($meta)) {
         $meta = get_option('meta_enhancer_seo_tags');
     }
 
@@ -143,6 +152,7 @@ function output_metaenhancer_meta_tags() {
         }
     }
 }
+
 
 // Customize the admin footer message
 add_filter('admin_footer_text', 'metaenhancer_footer_message');
