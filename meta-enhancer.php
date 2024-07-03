@@ -5,7 +5,7 @@
  * Author: Nymul Islam
  * Author URI: https://nymul-islam-moon.com/
  * Version: 0.1
- * Plugin URI: https://github.com/nymul-islam-moon/MetaEnhancer
+ * Plugin URI: https://github.com/nymul-islam-moon/MetaEnhancher
  */
 
 
