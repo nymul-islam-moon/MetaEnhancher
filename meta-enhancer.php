@@ -140,19 +140,20 @@ class Meta_Enhancer {
             $meta = get_post_meta($post->ID, 'metaenhancer_meta_tags', true);
         }
 
+        // Fallback to default meta tags if not set on a singular post/page
         if (empty($meta) || !is_array($meta)) {
             $meta = get_option('meta_enhancer_seo_tags');
         }
 
         if ($meta) {
             if (!empty($meta['title'])) {
-                echo '<meta name="title" content="' . esc_attr($meta['title']) . '">';
+                echo "\n<meta name=\"title\" content=\"" . esc_attr($meta['title']) . "\" />\n";
             }
             if (!empty($meta['description'])) {
-                echo '<meta name="description" content="' . esc_attr($meta['description']) . '">';
+                echo "\n<meta name=\"description\" content=\"" . esc_attr($meta['description']) . "\" />\n";
             }
             if (!empty($meta['keywords'])) {
-                echo '<meta name="keywords" content="' . esc_attr($meta['keywords']) . '">';
+                echo "\n<meta name=\"keywords\" content=\"" . esc_attr($meta['keywords']) . "\" />\n";
             }
         }
     }
