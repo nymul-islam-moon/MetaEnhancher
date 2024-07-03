@@ -12,6 +12,10 @@
  * Stable tag:         1.0.1
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Meta_Enhancer {
 
     public function __construct() {
