@@ -1,14 +1,17 @@
 <?php
 /**
- *  Plugin Name: WP-MetaEnhancer
- *  Description: A plugin to easily add SEO meta tags to posts and pages, and customize the admin footer message in the WordPress dashboard.
- *  Author: Nymul Islam
- *  Author URI: https://nymul-islam-moon.com/
- *  Version: 0.1
- *  Requires at least: 6.4
- *  Requires PHP: 7.4
- *  Plugin URI: https://github.com/nymul-islam-moon/MetaEnhancher
+ * Plugin Name:        MetaEnhancer
+ * Description:        Easily add SEO meta tags to posts and pages, and customize the admin footer message.
+ * Author:             Nymul Islam
+ * Author URI:         https://nymul-islam-moon.com/
+ * Version:            1.0.1
+ * License:            GPL-2.0-or-later
+ * Requires at least:  6.4
+ * Requires PHP:       7.4
+ * Plugin URI:         https://github.com/nymul-islam-moon/MetaEnhancher
+ * Stable tag:         1.0.1
  */
+
 
 // Add the settings menu
 add_action('admin_menu', 'wp_meta_enhancer_menu');
@@ -50,26 +53,26 @@ function wp_meta_enhancer_settings() {
 function seo_meta_title_callback() {
     $options = get_option('wp_meta_enhancer_seo_tags');
     $title = isset($options['title']) ? esc_attr($options['title']) : '';
-    echo '<input type="text" name="wp_meta_enhancer_seo_tags[title]" value="' . $title . '">';
+    echo '<input type="text" name="wp_meta_enhancer_seo_tags[title]" value="' . esc_attr($title) . '">';
 }
 
 function seo_meta_description_callback() {
     $options = get_option('wp_meta_enhancer_seo_tags');
     $description = isset($options['description']) ? esc_attr($options['description']) : '';
-    echo '<textarea name="wp_meta_enhancer_seo_tags[description]">' . $description . '</textarea>';
+    echo '<textarea name="wp_meta_enhancer_seo_tags[description]">' . esc_textarea($description) . '</textarea>';
 }
 
 function seo_meta_keywords_callback() {
     $options = get_option('wp_meta_enhancer_seo_tags');
     $keywords = isset($options['keywords']) ? esc_attr($options['keywords']) : '';
-    echo '<input type="text" name="wp_meta_enhancer_seo_tags[keywords]" value="' . $keywords . '">';
+    echo '<input type="text" name="wp_meta_enhancer_seo_tags[keywords]" value="' . esc_attr($keywords) . '">';
 }
 
 // Footer Message Callback
 function footer_message_callback() {
     $message = get_option('wp_meta_enhancer_footer_message');
     $message = $message ? esc_attr($message) : '';
-    echo '<textarea name="wp_meta_enhancer_footer_message">' . $message . '</textarea>';
+    echo '<textarea name="wp_meta_enhancer_footer_message">' . esc_textarea($message) . '</textarea>';
 }
 
 // Add meta boxes to posts/pages for custom SEO meta tags
@@ -86,15 +89,15 @@ function metaenhancer_meta_box_callback($post) {
     ?>
     <p>
         <label for="seo_meta_title">Title</label>
-        <input type="text" name="metaenhancer_meta_tags[title]" id="seo_meta_title" value="<?php echo $title; ?>">
+        <input type="text" name="metaenhancer_meta_tags[title]" id="seo_meta_title" value="<?php echo esc_attr( $title ); ?>">
     </p>
     <p>
         <label for="seo_meta_description">Description</label>
-        <textarea name="metaenhancer_meta_tags[description]" id="seo_meta_description"><?php echo $description; ?></textarea>
+        <textarea name="metaenhancer_meta_tags[description]" id="seo_meta_description"><?php echo esc_textarea($description) ?></textarea>
     </p>
     <p>
         <label for="seo_meta_keywords">Keywords</label>
-        <input type="text" name="metaenhancer_meta_tags[keywords]" id="seo_meta_keywords" value="<?php echo $keywords; ?>">
+        <input type="text" name="metaenhancer_meta_tags[keywords]" id="seo_meta_keywords" value="<?php echo esc_attr($keywords) ?>">
     </p>
     <?php wp_nonce_field('save_metaenhancer_meta_tags', 'metaenhancer_meta_tags_nonce'); ?>
     <?php
