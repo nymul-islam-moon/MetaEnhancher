@@ -16,9 +16,55 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class Meta_Enhancer {
+require_once __DIR__ . '/vendor/autoload.php';
 
-    public function __construct() {
+/**
+ * The main plugin class
+ */
+final class Meta_Enhancer {
+
+    /**
+     * Plugin version
+     *
+     * @var string
+     */
+    const version = '1.0.1';
+
+    /**
+     * Class constructor
+     */
+    private function __construct() {
+        $this->define_constants();
+        add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
+    }
+
+    /**
+     * Initializes a singleton instance
+     *
+     * @return \Meta_Enhancer
+     */
+    public static function init() {
+        static $instance = false;
+
+        if ( ! $instance ) {
+            $instance = new self();
+        }
+
+        return $instance;
+    }
+
+    public function define_constants()
+    {
+        define( 'META_ENHANCER_VERSION', self::version );
+    }
+
+    /**
+     * Initialize the plugin
+     *
+     * @return void
+     */
+    public function init_plugin()
+    {
         add_action('admin_menu', [$this, 'add_settings_menu']);
         add_action('admin_init', [$this, 'register_settings']);
         add_action('add_meta_boxes', [$this, 'add_meta_boxes']);
@@ -27,14 +73,24 @@ class Meta_Enhancer {
         add_filter('admin_footer_text', [$this, 'custom_footer_message']);
     }
 
+    /**
+     * Do stuff upon plugin activation
+     *
+     * @return void
+     */
+    public function activate() {
+        $installer = new MetaEnhancer\Installer();
+        $installer->run();
+    }
+
     public function add_settings_menu() {
         add_menu_page(
-            'Meta Enhancer', // Page title
-            'Meta Enhancer',          // Menu title
-            'manage_options',        // Capability
-            'meta_enhancer',         // Menu slug
-            [$this, 'settings_page'], // Callback function
-            'dashicons-shortcode' // Icon URL or Dashicon class
+            'Meta Enhancer',
+            'Meta Enhancer',
+            'manage_options',
+            'meta_enhancer',
+            [$this, 'settings_page'],
+            'dashicons-shortcode'
         );
     }
 
@@ -133,29 +189,7 @@ class Meta_Enhancer {
     }
 
     public function output_meta_tags() {
-        $meta = null;
-
-        if (is_singular()) {
-            global $post;
-            $meta = get_post_meta($post->ID, 'metaenhancer_meta_tags', true);
-        }
-
-        // Fallback to default meta tags if not set on a singular post/page
-        if (empty($meta) || !is_array($meta)) {
-            $meta = get_option('meta_enhancer_seo_tags');
-        }
-
-        if ($meta) {
-            if (!empty($meta['title'])) {
-                echo "\n<meta name=\"title\" content=\"" . esc_attr($meta['title']) . "\" />\n";
-            }
-            if (!empty($meta['description'])) {
-                echo "\n<meta name=\"description\" content=\"" . esc_attr($meta['description']) . "\" />\n";
-            }
-            if (!empty($meta['keywords'])) {
-                echo "\n<meta name=\"keywords\" content=\"" . esc_attr($meta['keywords']) . "\" />\n";
-            }
-        }
+        return output_meta_tags();
     }
 
     public function custom_footer_message() {
@@ -166,4 +200,14 @@ class Meta_Enhancer {
     }
 }
 
-new Meta_Enhancer();
+/**
+ * Initializes the main plugin
+ *
+ * @return \Meta_Enhancer
+ */
+function meta_enhancer() {
+    return Meta_Enhancer::init();
+}
+
+// kick-off the plugin
+meta_enhancer();
