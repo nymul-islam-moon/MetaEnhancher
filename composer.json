@@ -1,0 +1,20 @@
+{
+    "name": "nymul-islam/meta-enhancer",
+    "description": "A plugin for e-mail marketing",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "Nymul Islam Moon",
+            "email": "nymulislam.webappick@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "MetaEnhancer\\": "includes/"
+        },
+        "files": [ "includes/functions.php" ]
+    },
+    "require": {}
+}
